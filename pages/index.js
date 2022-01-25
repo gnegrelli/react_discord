@@ -33,8 +33,8 @@ function Title(props) {
 }
 
 export default function PaginaInicial() {
-  //const username = 'gnegrelli';
-  const [username, setUsername] = React.useState('gnegrelli');
+  const min_chars = 2;
+  const [username, setUsername] = React.useState('');
   const routing = useRouter();
 
   return (
@@ -89,8 +89,7 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
-			  value = {username}
-			  onChange={(event) => setUsername(event.target.value)}
+			  onChange={(event) => event.target.value.length > min_chars ? setUsername(event.target.value) : setUsername('')}
             />
             <Button
               type='submit'
