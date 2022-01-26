@@ -42,7 +42,8 @@ export default function PaginaInicial() {
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundImage: 'url(https://c.tenor.com/fKIG2kiLVPgAAAAM/this-is-fine-its-fine.gif)',
+//          backgroundImage: 'url(https://c.tenor.com/fKIG2kiLVPgAAAAM/this-is-fine-its-fine.gif)',
+          backgroundImage: 'url(https://c.tenor.com/WuOwfnsLcfYAAAAC/star-wars-obi-wan-kenobi.gif)',
           backgroundRepeat: 'no-repeat', 
 		  backgroundSize: 'cover', backgroundBlendMode: 'multiply',
         }}
@@ -74,7 +75,7 @@ export default function PaginaInicial() {
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
             }}
           >
-            <Title tag="h2">Boas vindas de volta!</Title>
+            <Title tag="h2">Hello there...</Title>
             <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
               {appConfig.name}
             </Text>
@@ -90,10 +91,11 @@ export default function PaginaInicial() {
                 },
               }}
 			  onChange={(event) => event.target.value.length > min_chars ? setUsername(event.target.value) : setUsername('')}
+			  placeholder='general_kenobi'
             />
             <Button
               type='submit'
-              label='Entrar'
+              label='Enter'
               fullWidth
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
