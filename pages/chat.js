@@ -5,11 +5,13 @@ import appConfig from '../config.json';
 export default function ChatPage() {
 	const [ message, setMessage ] = React.useState('');
 	const [ messageList, setMessageList ] = React.useState([]);
+	const [ sendButton, setSendButton ] = React.useState(false);
 
 	function handleNewMessage(newMessage) {
 		const messageObj = {'id': messageList.length + 1, 'author': 'gnegrelli', 'text': newMessage};
 		setMessageList([messageObj, ...messageList]);
 		setMessage('');
+		setSendButton(false);
 	}
 
     return (
@@ -60,7 +62,10 @@ export default function ChatPage() {
                     >
                         <TextField
 							value = { message }
-							onChange = { (event) => setMessage(event.target.value) }
+							onChange = { (event) => { 
+								setMessage(event.target.value);
+								message.length > 0 ? setSendButton(true) : null ;
+							}}
 							onKeyPress = { (event) => {
 								if (event.key === 'Enter' && !event.shiftKey) {
 									event.preventDefault();
@@ -87,6 +92,7 @@ export default function ChatPage() {
 							colorVariant='positive'
 							rounded='full'
 							onClick={ (event) => {message.length > 0 ? handleNewMessage(message) : null} }
+							disabled={ !sendButton }
 						/>
                     </Box>
                 </Box>
@@ -169,6 +175,13 @@ function MessageList(props) {
         		            >
                 		        {(new Date().toLocaleDateString())}
 		                    </Text>
+							<Button 
+								variant='tertiary'
+								colorVariant='negative'
+								rounded='full'
+								size='xs'
+								label='x'
+							/>
         		        </Box>
 						<Text 
 							styleSheet={{
