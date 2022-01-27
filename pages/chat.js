@@ -80,6 +80,14 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+						<Button
+							label='Send'
+							size='xl'
+							variant='primary'
+							colorVariant='positive'
+							rounded='full'
+							onClick={ (event) => {message.length > 0 ? handleNewMessage(message) : null} }
+						/>
                     </Box>
                 </Box>
             </Box>
