@@ -6,13 +6,13 @@ import {  useRouter } from 'next/router';
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
 
 
-const supabase_anon_key = process.env.REACT_APP_SUPABASE_ANON_KEY;
-const supabase_url = process.env.REACT_APP_SUPABASE_URL;
+const supabase_anon_key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseClient = createClient(supabase_url, supabase_anon_key);
 
 function messageListener(addMessage) {
 	return supabaseClient.from('messages')
-		.on('*', (response) => {addMessage(reponse.new)})
+		.on('*', (response) => {addMessage(response.new)})
 		.subscribe();
 }
 
@@ -44,8 +44,7 @@ export default function ChatPage() {
 
 	function handleNewMessage(newMessage) {
 		const messageObj = {'author': username, 'text': newMessage};
-		supabaseClient.from('messages').insert([messageObj]).then(({data})=>console.log('msg',data));
-		//setMessageList([messageObj, ...messageList]);
+		supabaseClient.from('messages').insert([messageObj]).then(()=>{});
 		setMessage('');
 		setSendButton(false);
 	}
@@ -175,7 +174,6 @@ function MessageList(props) {
         >
 
 			{ props.messages.map( (message) => { 
-				console.log(message);
 				return (
             		<Text
 		                key={message.id}
