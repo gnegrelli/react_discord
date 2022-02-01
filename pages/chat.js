@@ -1,15 +1,51 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js';
+import {  useRouter } from 'next/router';
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
+
+
+const supabase_anon_key = process.env.REACT_APP_SUPABASE_ANON_KEY;
+const supabase_url = process.env.REACT_APP_SUPABASE_URL;
+const supabaseClient = createClient(supabase_url, supabase_anon_key);
+
+function messageListener(addMessage) {
+	return supabaseClient.from('messages')
+		.on('*', (response) => {addMessage(reponse.new)})
+		.subscribe();
+}
 
 export default function ChatPage() {
+	const routing = useRouter();
+	const username = routing.query.username;
 	const [ message, setMessage ] = React.useState('');
 	const [ messageList, setMessageList ] = React.useState([]);
 	const [ sendButton, setSendButton ] = React.useState(false);
 
+	React.useEffect(() => {
+		supabaseClient
+		.from('messages')
+		.select('*')
+		.order('created_at', { ascending: false})
+		.then(({ data }) => {
+			setMessageList(data);
+		});
+
+		const subscription = messageListener((newMessage) => {
+			setMessageList((currentList) => {
+				return [newMessage, ...currentList,]
+			});
+		});
+	
+		return () => {subscription.unsubscribe()}
+
+	}, []);
+
 	function handleNewMessage(newMessage) {
-		const messageObj = {'id': messageList.length + 1, 'author': 'gnegrelli', 'text': newMessage};
-		setMessageList([messageObj, ...messageList]);
+		const messageObj = {'author': username, 'text': newMessage};
+		supabaseClient.from('messages').insert([messageObj]).then(({data})=>console.log('msg',data));
+		//setMessageList([messageObj, ...messageList]);
 		setMessage('');
 		setSendButton(false);
 	}
@@ -85,6 +121,11 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+						<ButtonSendSticker 
+							onStickerClick={(sticker) =>
+								handleNewMessage(`:sticker: ${sticker}`)
+							}
+						/>
 						<Button
 							label='Send'
 							size='xl'
@@ -134,6 +175,7 @@ function MessageList(props) {
         >
 
 			{ props.messages.map( (message) => { 
+				console.log(message);
 				return (
             		<Text
 		                key={message.id}
@@ -183,13 +225,19 @@ function MessageList(props) {
 								label='x'
 							/>
         		        </Box>
-						<Text 
-							styleSheet={{
-								whiteSpace: 'pre-line',
-							}}
-						>
-							{ message.text }
-						</Text>
+						{message.text.startsWith(':sticker:') ?
+						(
+							<Image src={message.text.replace(':sticker: ', '')} />
+						):
+						(
+							<Text 
+								styleSheet={{
+									whiteSpace: 'pre-line',
+								}}
+							>
+								{ message.text }
+							</Text>
+						)}
 		            </Text>
 				)
 			})}
