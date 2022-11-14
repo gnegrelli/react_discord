@@ -125,6 +125,7 @@ export default function PaginaInicial() {
             }}
           >
             <Image
+              alt="User profile image"
               styleSheet={{
                 borderRadius: '50%',
                 marginBottom: '16px',

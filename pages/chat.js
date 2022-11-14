@@ -193,6 +193,7 @@ function MessageList(props) {
                 		    }}
 		                >
         		            <Image
+        		                alt="User profile image"
                 		        styleSheet={{
                         		    width: '20px',
 		                            height: '20px',
@@ -225,7 +226,7 @@ function MessageList(props) {
         		        </Box>
 						{message.text.startsWith(':sticker:') ?
 						(
-							<Image src={message.text.replace(':sticker: ', '')} />
+							<Image alt="Sticker message" src={message.text.replace(':sticker: ', '')} />
 						):
 						(
 							<Text 
