@@ -42,7 +42,6 @@ export default function PaginaInicial() {
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-//          backgroundImage: 'url(https://c.tenor.com/fKIG2kiLVPgAAAAM/this-is-fine-its-fine.gif)',
           backgroundImage: 'url(https://c.tenor.com/WuOwfnsLcfYAAAAC/star-wars-obi-wan-kenobi.gif)',
           backgroundRepeat: 'no-repeat', 
 		  backgroundSize: 'cover', backgroundBlendMode: 'multiply',
@@ -68,7 +67,13 @@ export default function PaginaInicial() {
             as="form"
 			onSubmit={(event) => {
 				event.preventDefault();
-				routing.push(`/chat?username=${username}`);
+				if (username != "") {
+                    fetch(`https://api.github.com/users/${username}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.message == "Not Found" ? routing.push("/404") : routing.push(`/chat?username=${username}`);
+                    })
+                }
 			}}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
